@@ -49,21 +49,21 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import AddItem from "./index.js";
 
-const testProps = {
-    addToList: "this should be added to the list",
-    buttonText: "Add To List"
-}
 
 test("AddItem component shows the user an input with label 'Add item:'", () => {
-    render(< AddItem {...testProps}/>)
+    render(< AddItem addToList={jest.fn()} buttonText="Add to List"/>)
     const input = screen.getByLabelText("Add item:");
     expect(input).toBeInTheDocument();
 });
 
 test("AddItem component shows the user a button containing the value of the buttonText prop", () => {
-    render(< AddItem {...testProps}/>)
-    const button = screen.getByText(testProps.buttonText);
+    const mockAddingItemToList = jest.fn();
+    render(< AddItem addToList={mockAddingItemToList} buttonText="Add to List"/>)
+    const button = screen.getByText("Add to List");
     expect(button).toBeInTheDocument();
+    userEvent.click(button);
+    expect(mockAddingItemToList).toHaveBeenCalledTimes(1);
+    expect(mockAddingItemToList).toHaveBeenCalledWith("");
 });
 
 
